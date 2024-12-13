@@ -2,26 +2,31 @@
   <div class="p-4 bg-white rounded shadow-md w-96">
     <h1 class="text-xl font-bold mb-4">Login</h1>
     <form>
+      <!-- Input para el nombre de usuario -->
       <div class="mb-4">
         <label for="username" class="block font-medium">Username</label>
         <input
           id="username"
           type="text"
-          [(ngModel)]="username"
-          name="username"
+          (input)="onUsernameInput($event)"
           class="w-full mt-1 p-2 border rounded"
+          placeholder="Enter your username"
         />
       </div>
+
+      <!-- Input para la contraseña -->
       <div class="mb-4">
         <label for="password" class="block font-medium">Password</label>
         <input
           id="password"
           type="password"
-          [(ngModel)]="password"
-          name="password"
+          (input)="onPasswordInput($event)"
           class="w-full mt-1 p-2 border rounded"
+          placeholder="Enter your password"
         />
       </div>
+
+      <!-- Botones para registro e inicio de sesión -->
       <div class="flex justify-between">
         <button
           type="button"
