@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { AuthService } from '../services/auth.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -11,7 +12,7 @@ export class LoginComponent {
   username: string = '';
   password: string = '';
 
-  constructor(private authService: AuthService) {}
+  constructor(private authService: AuthService, private router: Router) {}
 
   /**
    * Maneja los cambios en el input de username.
@@ -50,8 +51,7 @@ export class LoginComponent {
     if (this.isInputValid()) {
       this.authService.login(this.username, this.password).subscribe({
         next: (response) => {
-          console.log('Login successful:', response);
-          alert('Login successful!');
+          this.router.navigate(['/foros']);
         },
         error: (err) => {
           console.error('Login error:', err);

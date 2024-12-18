@@ -6,10 +6,14 @@ import { AppComponent } from './app/app.component';
 import { FormsModule } from '@angular/forms';
 import { HomeComponent } from './app/home/home.component';
 import { LoginComponent } from './app/login/login.component';
+import { ForosComponent } from './app/foros/foros.component';
+import { MensajesComponent } from './app/mensajes/mensajes.component';
 
 const routes = [
   { path: '', component: HomeComponent }, // Página inicial
   { path: 'login', component: LoginComponent }, // Página de login
+  { path: 'foros', component: ForosComponent }, // Página de foros
+  { path: 'mensajes', component: MensajesComponent }, // Página de mensajes
 ];
 
 bootstrapApplication(AppComponent, {

@@ -1,51 +1,44 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
+import { tap } from 'rxjs/operators';
 
 @Injectable({
-  providedIn: 'root', // Disponible globalmente
+  providedIn: 'root',
 })
 export class AuthService {
-  private apiUrl = 'http://localhost:5208/api'; // Base del backend
+  private apiUrl = 'http://localhost:5208/api';
+  
+  // Estado de login
+  private loggedInSubject = new BehaviorSubject<boolean>(false);
+  isLoggedIn$ = new BehaviorSubject<boolean>(false);
 
   constructor(private http: HttpClient) {}
 
-  /**
-   * Registrar un nuevo usuario.
-   * @param username - Nombre de usuario
-   * @param password - Contraseña del usuario
-   * @returns Observable con la respuesta del backend
-   */
-  register(username: string, password: string): Observable<any> {
-    if (!username || !password) {
-      throw new Error('Invalid input: username and password are required.');
-    }
+  register(username: string, password: string) {
+    return this.http.post(`${this.apiUrl}/auth/register`, { username, passwordHash: password });
+  }
+  
 
-    const payload = {
-      username,
-      passwordHash: password, // El backend espera `passwordHash`
-    };
+  private currentUser: string = ''; // Almacena el nombre del usuario logueado
 
-    return this.http.post(`${this.apiUrl}/auth/register`, payload);
+  login(username: string, password: string) {
+    return this.http
+      .post(`${this.apiUrl}/auth/login`, { username, passwordHash: password })
+      .pipe(
+        tap(() => {
+          this.isLoggedIn$.next(true); // Actualiza el estado
+          this.currentUser = username; // Guarda el nombre del usuario logueado
+        })
+      );
   }
 
-  /**
-   * Iniciar sesión.
-   * @param username - Nombre de usuario
-   * @param password - Contraseña del usuario
-   * @returns Observable con la respuesta del backend
-   */
-  login(username: string, password: string): Observable<any> {
-    if (!username || !password) {
-      throw new Error('Invalid input: username and password are required.');
-    }
-
-    const payload = {
-      username,
-      passwordHash: password,
-    };
-
-    return this.http.post(`${this.apiUrl}/auth/login`, payload);
+  logout(): void {
+    this.loggedInSubject.next(false); // Cambiar estado a no logueado
   }
+
+getUsername(): string {
+  return this.currentUser; // Devuelve el nombre del usuario logueado
+}
 }
 
